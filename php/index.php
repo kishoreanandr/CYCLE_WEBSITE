@@ -18,6 +18,8 @@
 <!-- Popper JS -->
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -55,7 +57,7 @@
 
                 
                 <!-- selecting category-->
-                <h6 class="text-info">Select Category</h6>
+                <h6 class="text-info mt-1">Select Category</h6>
 
                 <ul class="list-group"><!-- unique brands from data base-->
                         <?php
@@ -103,16 +105,16 @@
                 <div class="col-md-3 mb-2">
                         <div class="card-deck">
                             <div class="card border-secondary">
-                                <img src="<?php echo $row['product_images']; ?>" alt="Product Details..." class="card-img-top" width="300" height="200px" style="object-fit:cover";>
+                                <img src="<?php echo $row['product_images']; ?>" alt="Product Details..." class="card-img-top" width="300" height="200px" style="object-fit:cover">
 
                                 <div class="card-img-overlay">
-                                    <h6 style="margin-top:175px;" class="text-light bg-info text-center rounded p1"><?= $row['product_name']; ?></h6>
+                                    <h6 style="margin-top:190px;" class="text-light bg-info text-center rounded p-2"><?= $row['product_name']; ?></h6>
 
                                 </div>
                                 
                                 <div class="card-body">
 
-                                    <h4 class="card-title text-danger">Price: <?= number_format($row['product_price']); ?>/-</h4>
+                                    <h4 class="card-title text-danger mt-5">Price: <?= number_format($row['product_price']); ?>/-</h4>
                                     <p>
                                       Category : <?= $row['category']; ?><br>  
                                     </p>
@@ -130,5 +132,45 @@
             </div>
         </div>
     </div>
+
+    <script>
+     $(document).ready(function()
+     {
+
+        //this is for showing loader
+        $(".product_check").click(function()
+        {
+            $("#loader").show();
+
+            var action='data';
+            var brand=get_filter_text('brand');
+            var category=get_filter_text('category');
+
+            $.ajax({
+                url:'action.php',
+                method:'POST',
+                data:{action:action,brand:brand,category:category},
+                success:function(response)
+                {
+                    $("#result").html(response);//display the details in the result id 
+                    $("#loader").hide();
+                    $("#textChange").text("Filtered Produts");//it will show when checked 
+                }
+            });
+            
+        });
+
+        //this is for storing the value checking by user 
+        function get_filter_text(text_id)
+        {
+            var filterData=[];
+            $('#'+text_id+':checked').each(function()
+            {
+                filterData.push($(this).val());
+            });
+            return filterData;
+        }
+     });            
+    </script>
 </body>
 </html>
