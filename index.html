@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vel Cycle Mart </title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    
+    <style>
+        :root{
+            --main-color:#ffa343;
+        }
+        
+/*Css slider*/
+.slider
+{
+    height: 100vh; /*It will be equal to the height of the screen*/
+    margin-top: -50px; /*Header to be at 50px at grid-template-rows*/
+    position: relative; /*To overlap each other*/
+    color: #eee;
+}
+.slider p:nth-child(3)
+{
+    color: #858080;
+}
+.slider .list .item
+{
+    position: absolute; /*to display other content in 1st image*/
+    inset: 0 0 0 0;
+    overflow: hidden; /*not go outside of frame*/
+    opacity: 0; /*it is for displaying only 1st slide*/ 
+    transition: 0.5s; /*for smooth pop up*/
+}
+.slider .list .item img
+{
+    width: 100%; /*to fix the image full*/
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider .list .item::after
+{
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left:0;
+    bottom: 0;
+    background-image: linear-gradient(to top,#000 20%,transparent);
+    background-image: linear-gradient(to bottom,#000 20%,transparent);
+}
+
+.slider .list .item .content
+{
+    position: absolute;
+    left: 10%;
+    top: 20%;
+    width: 500px;
+    max-width: 80%; /*upto 80% of screen size*/
+    z-index: 1; /*other elements overlap*/
+}
+.slider .list .item .content p:nth-child(1)
+{
+    text-transform: uppercase;
+    letter-spacing: 10px;
+}
+
+.slider .list .item .content h2
+{
+    font-size: 80px;
+    margin: 0; /*so that h2 tag is not comming down*/
+}
+.slider .list .item.active
+{
+    opacity: 1; /* for showing 1st slide only */
+    z-index: 10; /*to overlap other items*/   
+}
+
+/*for creating anitmation*/
+
+@keyframes showContent {
+    to /*used to display final effects*/
+    {
+        transform: translateY(0);
+        filter: blur(0);
+        opacity: 1;
+    }
+}
+
+.slider .list .item.active p:nth-child(1),
+.slider .list .item.active h2,
+.slider .list .item.active p:nth-child(3)
+{
+    transform: translateY(30px); /*to downward*/
+    filter: blur(20px);
+    opacity: 0;/*to hide it*/
+    animation: showContent .5s .7s ease-in-out 1 forwards; /*.5s to show animation and .7 to delay ease in to smooth*/
+}
+
+.slider .list .item.active h2
+{
+    animation-delay: 1s;
+}
+.slider .list .item.active p:nth-child(3)
+{
+    animation-delay: 1.3s;
+}
+
+.arrows
+{
+    position: absolute;
+    top: 30%;
+    right:50px;
+    z-index: 100;/*it will not be seen should be highe than class item*/
+}
+.arrows button
+{
+    background-color: #eee5;
+    border: none;
+    font-family: monospace;
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: x-large;
+    color: #eee;
+    transition: .5s;
+}
+.arrows button:hover
+{
+    background-color: #eee;
+    color: #000;
+    cursor: pointer;
+}
+
+
+/* thumbnail */
+
+.thumbnail
+{
+    position: absolute;
+    bottom: 40px;
+    z-index: 11;
+    display: flex; /*to align in the same row*/
+    gap: 10px;
+    width: 100%;
+    height: 250px;
+    padding: 0 50px; /*distance for border*/
+    box-sizing: border-box; /*while using left andw right padding*/
+    overflow: auto;
+    justify-content: center; /*for aliging the images in center*/
+    cursor: pointer;
+    color: #ff6464;
+}
+
+/*to hide scroll baars*/
+.thumbnail::-webkit-scrollbar
+{
+    width: 0;
+}
+.thumbnail .item
+{
+    width: 150px;
+    height: 220px;
+    filter: brightness(.5);/*to image darker*/
+    transition: .5s;  
+    flex-shrink: 0; /*for mobile to not shrink*/
+}
+.thumbnail  .item img 
+{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.thumbnail .item.active
+{
+    filter: brightness(1.5);
+}
+.thumbnail .item .content
+{
+    position: absolute;
+    inset: auto 10px 10px 10px;
+}
+
+
+
+.footer
+{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,auto));   
+    gap:2rem;
+    background-color: #000;
+}
+
+.footer-box
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-box h3
+{
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.footer-box a
+{
+    color: #945050;
+    margin-bottom: 0.8rem;
+    transition: all 0.5s ease-in-out;
+}
+
+.footer-box a:hover 
+{
+    color:#efc144;
+    transform: translateX(-5px);
+}
+
+.social a
+{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    width: 45px;
+    background: #efc144;
+    color: var(--text-color);
+    font-size: 20px;
+    border-radius: 50%;
+    margin-right: 8px; 
+    transition: transform 0.6s;
+}
+
+.social a:hover
+{
+    background:#ffa343;
+    color:#fff;
+    transform: translateX(-4px);
+}
+
+.copyright p
+{
+    padding: 10px;
+    color: #979797;
+    font-size: 15px;
+    position: relative;
+    left: 140%;
+    top:20px;
+}
+
+@media screen and (max-width:678px) {
+    .thumbnail
+    {
+        justify-content: start;
+    }
+    .slider .list .item .content h2 
+    {
+        font-size: 60px;
+    }
+    .arrows
+    {
+        top: 10%;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <!--header-->
+    <header>
+        <a href="#" class="logo">Vel Cycle Mart</a>
+        <div class="bx bx-menu" id="menu-icon"></div>
+        <ul type="none" class="navbar">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="filter.php">Brands</a></li>
+            <li><a href="#">Accessories</a></li>
+            <li><a href="#">Contact Us</a></li>
+        </ul>
+    </header>
+
+    <!--home section-->
+    <section class="home" id="home">
+    <div class="slider">
+        <!-- List Items-->
+        <div class="list">
+            <div class="item active">
+                <img src="img1.jpg" alt="Image1" style="background-position-y:top center;">
+                <div class="content">
+                    <h2>Hero Cycles</h2>
+                    <p>For all your cycling needs, look no further than Hero Cycles. We're the best cycles brand in India with the largest share in the Indian market. Whether you're a beginner or a seasoned pro, we have the perfect cycle for you. Get out there and start pedalling!</p>
+
+                </div>
+            </div>
+            <div class="item">
+                <img src="img2.png" alt="Image2">
+                <div class="content">
+                    <h2>Hercules Cycles</h2>
+                    <p>Swift, stylish, and sturdy bikes designed for your everyday adventure, fitness and fun. Choose your adventure and order your ride here.</p>
+
+                </div>
+            </div>
+            <div class="item">
+                <img src="img3.jpg" alt="Image3">
+                <div class="content">
+                    <h2>Avon Cycles</h2>
+                    <p> Avon Cycles, are the largest cycle manufacturer in India and a trusted choice of cycling enthusiasts who thrive on counting on their every ride. It has been our greatest pleasure to serve the most cost-effective, convenient, and sustainable mobility solutions across the country.</p>
+
+                </div>
+            </div>
+            <div class="item">
+                <img src="img4.jpg" alt="Image4">
+                <div class="content">
+                    <h2>Hero Cycles</h2>
+                    <p>For all your cycling needs, look no further than Hero Cycles. We're the best cycles brand in India with the largest share in the Indian market. Whether you're a beginner or a seasoned pro, we have the perfect cycle for you. Get out there and start pedalling!</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button arrows-->
+    <div class="arrows">
+        <button id="prev"><</button>
+        <button id="next">></button>
+    </div>
+
+    <!-- Thumbnail-->
+    <div class="thumbnail">
+        <div class="item active">
+            <img src="img1.jpg" alt="Image1">
+            <div class="content">
+                Hero
+            </div>
+       </div>
+        <div class="item">
+            <img src="img2.png" alt="Image2">
+            <div class="content">
+                Hercules
+            </div>
+        </div>
+        <div class="item">
+            <img src="img3.jpg" alt="Image3">
+            <div class="content">
+                Avon 
+            </div>
+        </div>
+        <div class="item">
+            <img src="img4.jpg" alt="Image4">
+            <div class="content">
+                Hero
+            </div>
+        </div>
+    </div>
+    <script src="slider.js"></script>
+</section>
+    <!--container-->
+    <section>
+        <div class="text">
+            <h2>Tie up companies in India</h2>
+        </div>
+        <div class="row-items">
+            <div class="container-box">
+                <div class="container-img">
+                    <img src="HERO.png" alt="HERO">
+                </div>
+                <h4>HERO CYCLE</h4>
+                <p></p>
+            </div>
+
+            <div class="container-box">
+                <div class="container-img">
+                    <img src="HERCULES.png" alt="HERCULES">
+                </div>
+                <h4>HERCULES CYCLE</h4>
+                <p></p>
+            </div>
+
+            <div class="container-box">
+                <div class="container-img">
+                    <img src="AVON.png" alt="AVON">
+                </div>
+                <h4>AVON CYCLE</h4>
+                <p></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Package Section -->
+
+    <section class="package" id="package">
+        <div class="title">
+            <h2>Our top picks</h2>
+        </div>
+        <div class="package-content">
+            <div class="box">
+                <div class="thum">
+                    <img src="kids\01.png" alt="mall image">
+                    <h3>$499</h3>
+                </div>
+                <div class="dest-content">
+                    <div class="location">
+                        <h4>Dubai</h4>
+                        <p>4h -5h</p>
+                    </div>
+                    <div class="stars">
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="thum">
+                    <img src="kids\02.png" alt="mall image">
+                    <h3>$499</h3>
+                </div>
+                <div class="dest-content">
+                    <div class="location">
+                        <h4>Dubai</h4>
+                        <p>4h -5h</p>
+                    </div>
+                    <div class="stars">
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="thum">
+                    <img src="kids\03.png" alt="mall image">
+                    <h3>$499</h3>
+                </div>
+                <div class="dest-content">
+                    <div class="location">
+                        <h4>Dubai</h4>
+                        <p>4h -5h</p>
+                    </div>
+                    <div class="stars">
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="thum">
+                    <img src="kids\04.png" alt="mall image">
+                    <h3>$499</h3>
+                </div>
+                <div class="dest-content">
+                    <div class="location">
+                        <h4>Dubai</h4>
+                        <p>4h -5h</p>
+                    </div>
+                    <div class="stars">
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                        <a href="#"><i class='bx bxs-star'></i></box-icon></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Destination Section -->
+    <section class="destination" id="destination">
+        <div class="text">
+            <h2>Our Most Popular <br> Destination!</h2>
+        </div>
+
+        <div class="destination-content">
+            <div class="col-content">
+                <img src="kids\11.png" alt="palace image">
+                <h5>Palace</h5>
+                <p>Peru</p>
+            </div>
+
+            <div class="col-content">
+                <img src="kids\22.png" alt="palace image">
+                <h5>Palace</h5>
+                <p>Peru</p>
+            </div>
+
+            <div class="col-content">
+                <img src="kids\33.png" alt="palace image">
+                <h5>Palace</h5>
+                <p>Peru</p>
+            </div>
+
+            <div class="col-content">
+                <img src="kids\44.png" alt="palace image">
+                <h5>Palace</h5>
+                <p>Peru</p>
+            </div>
+
+            <div class="col-content">
+                <img src="kids\55.png" alt="palace image">
+                <h5>Palace</h5>
+                <p>Peru</p>
+            </div>
+
+            <div class="col-content">
+                <img src="kids\66.png" alt="palace image">
+                <h5>Palace</h5>
+                <p>Peru</p>
+            </div>
+        </div>
+    </section>
+
+
+        <!-- News Letter -->
+    <!-- <section class="newsletter">
+        
+        <div class="news-text">
+            <h2>News Letter</h2>
+            <p>Hai Everyone Welcome </p>
+        </div>
+
+        <div class="send">
+            <form action="">
+                <input type="email" placeholder="Write the email"name="" id="">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </section> -->
+    <!--footer-->
+    <!-- <section id="contact">
+        <div class="footer">
+            <div class="main">
+                 <div class="list">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#"></a>About us</a></a></li>
+                        <li><a href="#"></a>Terms & Conditions</a></a></li>
+                        <li><a href="#"></a>Privacy Policy</a></a></li>
+                        <li><a href="#"></a>Help</a></a></li>
+                        <li><a href="#"></a>Tour</a></a></li>
+                    </ul>
+                </div>
+
+                <div class="list">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#"></a>About us</a></a></li>
+                        <li><a href="#"></a>Terms & Conditions</a></a></li>
+                        <li><a href="#"></a>Privacy Policy</a></a></li>
+                        <li><a href="#"></a>Help</a></a></li>
+                        <li><a href="#"></a>Tour</a></a></li>
+                    </ul>
+                </div> -->
+<!-- 
+                <div class="list">
+                    <h4>Contact Info</h4>
+                    <ul>
+                        <li><a href="#"></a>gate 6</a></a></li>
+                        <li><a href="#"></a>kongu</a></a></li>
+                        <li><a href="#"></a>Perundurai</a></a></li>
+                        <li><a href="#"></a>Erode</a></a></li>
+                        <li><a href="#"></a>Tn</a></a></li>
+                    </ul>
+                </div>
+
+                 <div class="list">
+                    <h4>Connect</h4>
+                    <div class="social">
+                        <a href="#"><i class="#"></i></a>
+                        <a href="#"><i class="#"></i></a>
+                        <a href="#"><i class="#"></i></a>                    
+                    </div>
+                </div> 
+            </div>
+        </div>-->
+        <section class="footer" data-aos="fade-in">
+            <div class="footer-box">
+                <h3>Services</h3>
+                    <a href="#">Conference</a>
+                    <a href="#">Journels</a>
+                    <a href="#">Branding</a>
+                    <a href="#">IEEE member</a>
+            </div>
+    
+            <div class="footer-box">
+                <h3>About</h3>
+                    <a href="#">Our story </a>
+                    <a href="#">Benefits</a>
+                    <a href="#">Team</a>
+                    <a href="#">Carrers</a>
+            </div>
+    
+            <div class="footer-box">
+                <h3>Help</h3>
+                    <a href="#">FAQ's</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">Team</a>
+            </div>
+    
+            <div class="footer-box">
+                <h3>Social</h3>
+                <div class="social">
+                    <a href="#"><i class="ri-instagram-fill"></i></a>
+                    <a href="#"><i class="ri-twitter-fill"></i></a>
+                    <a href="#"><i class="ri-facebook-circle-fill"></i></a>
+                </div>
+            </div>
+    
+    
+        <!-- copy rights -->
+    
+        <div class="copyright">
+            <p>|   c2i6@cmrit.ac.in   |   www.cmrit.ac.in   |</p>
+        </div>
+
+
+    </section>
+    <!--link to js-->
+    <script type="text/javascript" src="script.js"></script>
+</body>
+
+</html>
