@@ -1,5 +1,5 @@
 <?php
-    include("config.php");
+    include("config1.php");
 
     if(isset($_POST['input']))
     {
